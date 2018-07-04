@@ -1,0 +1,38 @@
+<html>
+<body>
+<p>
+    Name: <input type="text" name="query" id="query" value="2 * (23/(33))- 23 * (23)" />
+    <button id="calculate">Calculate</button>
+    <p id="result">
+    </p>
+</p>
+</form>
+
+<script type="text/JavaScript">
+  const button = document.getElementById('calculate')
+  button.onclick = () => {
+    let query = document.getElementById('query').value
+    query = btoa(query)
+    const http = new XMLHttpRequest()
+    http.open("GET", "/calculus?query="+query, true)
+
+    http.onreadystatechange = function () {
+      console.log('onreadystatechange')
+      if (http.readyState == 4 && http.status == 200) {
+        const scanResult = document.getElementById('result')
+        scanResult.innerText = http.response
+      }
+      else {
+        const result = 'readyState=' + http.readyState + ', status: ' + http.status
+        console.log(result)
+        const scanResult = document.getElementById('result')
+        scanResult.innerText = result
+      }
+    }
+    http.send()
+  }
+
+</script>
+
+</body>
+</html>
