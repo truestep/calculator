@@ -4,7 +4,7 @@ function calculateRpn(query) {
   // operators look-up-table
   // left value is needed to compare precedence
   // right value is means left association (0) or right association (1)
-  var operators = { };
+  const operators = { };
   operators['+'] = [0, 0];
   operators['-'] = [0, 0];
   operators['*'] = [1, 0];
@@ -44,7 +44,7 @@ function calculateRpn(query) {
   // incorrect
   function tokenizeInput(input) {
 
-    var query = input.replace(/\s/g, '');
+    let query = input.replace(/\s/g, '');
 
     // first we get rid of any invalid characters
     if (/[^0-9.+\-/*()]/g.test(query))
@@ -60,13 +60,13 @@ function calculateRpn(query) {
 
     // find places where negation occurs (i.e. '(-3)'') and place zeros
     // before minuses
-    var indexesForZeros = [];
-    for (var i = 0; i < query.length; i++)
+    const indexesForZeros = [];
+    for (let i = 0; i < query.length; i++)
       if (query.charAt(i) === '('
         && query.charAt(i + 1) === '-')
         indexesForZeros.push(i + 1);
 
-    for (var i = 0; i < indexesForZeros.length; i++) {
+    for (let i = 0; i < indexesForZeros.length; i++) {
       query = query.slice(0, indexesForZeros[i])
         + '0' + query.slice(indexesForZeros[i]);
     }
@@ -75,14 +75,14 @@ function calculateRpn(query) {
     if (query.charAt(0) === '-')
       query = '0' + query;
 
-    var tokens = [];
-    var parentheses = 0;
-    var currentNumber = '';
-    var areWeInsideANumber = false;
-    var wasPreviousTokenOperator = false;
+    const tokens = [];
+    let parentheses = 0;
+    let currentNumber = '';
+    let areWeInsideANumber = false;
+    let wasPreviousTokenOperator = false;
 
-    for (var i = 0; i < query.length; i++) {
-      var a = query.charAt(i);
+    for (let i = 0; i < query.length; i++) {
+      let a = query.charAt(i);
 
 
       if (/[+\-/*]/.test(a)) {
@@ -129,10 +129,10 @@ function calculateRpn(query) {
 
   // convert infix to Reverse Polish notation
   function shuntingYard(tokens) {
-    var out = [];
-    var stack = [];
+    let out = [];
+    let stack = [];
 
-    for (var i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < tokens.length; i++) {
       if (isOperator(tokens[i])) {
         while (stack.length > 0 && isOperator(peek(stack))) {
           if (comparePrecedence(tokens[i], peek(stack)) <= 0)
@@ -167,11 +167,11 @@ function calculateRpn(query) {
   // calculate result from Reverse Polish notation
   function calculateRpn(tokens) {
     tokens = tokens.reverse();
-    var stack = [];
+    let stack = [];
 
     while (tokens.length > 0) {
 
-      var a = tokens.pop();
+      let a = tokens.pop();
 
       if (/[^+\-/*]/g.test(a)) {
         stack.push(a);
@@ -219,14 +219,16 @@ function calculateRpn(query) {
     return null;
 
   var tokens = tokenizeInput(query);
-  if (tokens === null)
-    return 'Incorrect query';
+  if (tokens === null) {
+    throw new Error('Incorrect query')
+  }
 
   var out = shuntingYard(tokens);
 
   var result = calculateRpn(out);
-  if (result === null)
-    return 'Incorrect query';
+  if (result === null) {
+    throw new Error('Incorrect query')
+  }
 
   return result;
 }
@@ -238,7 +240,7 @@ function calculate(query) {
       res = calculateRpn(query)
       resolve(res)
     } catch (e) {
-      reject(e)
+      reject(e.message)
     }
 
   })

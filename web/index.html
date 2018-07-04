@@ -18,12 +18,8 @@
 
     http.onreadystatechange = function () {
       console.log('onreadystatechange')
-      if (http.readyState == 4 && http.status == 200) {
-        const scanResult = document.getElementById('result')
-        scanResult.innerText = http.response
-      }
-      else {
-        const result = 'readyState=' + http.readyState + ', status: ' + http.status
+      if (http.readyState == 4) {
+        const result = 'readyState=' + http.readyState + ', status: ' + http.status + ', response: ' + http.response
         console.log(result)
         const scanResult = document.getElementById('result')
         scanResult.innerText = result

@@ -10,14 +10,17 @@ function calculus(req, res) {
   if (req.query.query) {
     const decodedQuery = atob(req.query.query)
     calculator.calculate(decodedQuery).then(result => {
-      res.send(result + "")
+      const responseToSend = {"result": result }
+      res.send(JSON.stringify(responseToSend))
     }).catch(err => {
       console.log('something went wrong', err)
-      res.status(500).end()
+      const errorToSend = {"error": err}
+      res.status(500).send(JSON.stringify(errorToSend))
     })
   }
   else {
-    res.status(500).send('specify query like for 3*(2+1) calculus?query=MyooMisxKQ==')
+    const errorToSend = {"error": "no base64 encoded query specified"}
+    res.status(500).send(JSON.stringify(errorToSend))
   }
 
 }
